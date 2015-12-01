@@ -14,7 +14,7 @@ The scope of this specification is only in defining *what markings apply to*, no
 
 This approach maintains the current (STIX 1.2) pattern for applying field-level markings but adds an additional capability to support more basic markings.
 
-**Level 1 Markings**: Level 1 markings are the new capability that allow marking at two levels: the package as a whole, and top-level objects.
+**Level 1 Markings**: Level 1 markings are the new capability that allow marking at two levels: the package as a whole, and top-level objects.  
 **Level 2 Markings**: Level 2 markings are the current capability that allow marking at any level (down to the individual field).
 
 ## Data Model & Specification
@@ -49,7 +49,7 @@ Level 2 markings allow producers to marking individual fields with marking state
 
 Each STIX 2.0 package MAY contain a list of structured markings. In the JSON MTI specification, the `structured_markings` key contains an array of controlled structures along with a reference to which marking definitions they apply to. Each object in the `structured_markings` array consists of an object with two keys:
 
-`controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the document.
+`controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the document.  
 `marking_refs`: contains a list of references to the marking definitions to be applied
 
 Level 2 markings at the package level that specify fields already marked by level 1 markings **of the same type** override those markings for those fields. Similarly, Level 2 markings that target the same fields as Level 2 markings **of the same type** that appear earlier in the list of package markings override those markings.
@@ -58,7 +58,7 @@ Level 2 markings at the package level that specify fields already marked by leve
 
 Each STIX 2.0 top-level object MAY contain a list of structured markings. In the JSON MTI specification, the `structured_markings` key contains an array of controlled structures along with a reference to which marking definitions they apply to. Each object in the `structured_markings` array consists of an object with two keys:
 
-`controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the top-level object.
+`controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the top-level object.  
 `marking_refs`: contains a list of references to the marking definitions to be applied
 
 Level 2 markings at the package level that specify fields already marked by level 1 markings **of the same type** override those markings for those fields. Similarly, Level 2 markings that target the same fields as Level 2 markings **of the same type** that appear earlier in the list of object markings or in the list of package markings override those markings.
@@ -82,7 +82,7 @@ A **Level 0 Markings Processor** is not able to process data markings. A **Level
 2.1: A Level 2 processor **MUST** process all Level 1 and Level 2 markings per the mechanisms outlined in this specification.
 
 **Marking Precedence**  
-3.1: Level 1 and Level 2 processors **MUST** honor the following order of precedence:
+3.1: Level 1 and Level 2 processors **MUST** honor the following order of precedence:  
   * Level 2 markings at the object level (in reverse order of occurrence)
   * Level 2 markings at the package level (in reverse order of occurrence)
   * Level 1 markings at the object level
