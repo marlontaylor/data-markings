@@ -1,0 +1,24 @@
+{
+  "stix_version": "2.0",
+  "marking_definitions": [
+    {
+      "id": "us-cert:TLP-RED",
+      "marking_type": "tlp",
+      "tlp": "RED"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "indicator-1234",
+      "structured_markings": [
+        {
+          "controlled_structures": [
+            "@.title"
+          ],
+          "marking_refs": ["us-cert:TLP-RED"]
+        }
+      ],
+      "title": "First indicator"
+    }
+  ]
+}

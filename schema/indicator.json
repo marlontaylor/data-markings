@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "indicator",
+  "type": "object",
+  "allOf": [
+    {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this indicator"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title for this identity"
+        }
+      }
+    },
+    {"$ref": "markable_construct.json"}
+  ],
+  "required": ["title"]
+}

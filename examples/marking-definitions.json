@@ -1,0 +1,15 @@
+{
+  "stix_version": "2.0",
+  "marking_definitions": [
+    {
+      "id": "us-cert:TLP-GREEN",
+      "marking_type": "tlp",
+      "tlp": "GREEN"
+    },
+    {
+      "id": "example.com:copyright-1234",
+      "marking_type": "simple",
+      "statement": "Copyright 2015, Example Inc."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "markable",
+  "description": "A markable construct",
+  "type": "object",
+  "properties": {
+    "marking_refs": {
+      "type": "array",
+      "description": "A list of references to markings that apply to this object"
+    },
+    "structured_markings": {
+      "type": "array",
+      "description": "A description for this construct",
+      "items": {
+        "$ref": "#definitions/structured_marking"
+      }
+    }
+  },
+  "definitions": {
+    "structured_marking": {
+      "type": "object",
+      "properties": {
+        "controlled_structures": {
+          "type": "array",
+          "description": "List of JSONPath statements that the referenced markings apply to",
+          "items": {
+            "type": "string"
+          }
+        },
+        "marking_refs": {
+          "type": "array",
+          "description": "A list of references to markings that apply to this object"
+        }
+      }
+    }
+  }
+}

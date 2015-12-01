@@ -1,0 +1,25 @@
+{
+  "stix_version": "2.0",
+  "marking_definitions": [
+    {
+      "id": "us-cert:TLP-GREEN",
+      "marking_type": "tlp",
+      "tlp": "GREEN"
+    }
+  ],
+  "marking_refs": ["us-cert:TLP-GREEN"],
+  "indicators": [
+    {
+      "id": "1",
+      "title": "one"
+    },
+    {
+      "id": "2",
+      "title": "two"
+    },
+    {
+      "id": "3",
+      "title": "three"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "package",
+  "type": "object",
+  "allOf": [
+    {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this indicator"
+        },
+        "marking_definitions": {
+          "type": "array",
+          "description": "A list of marking definitions",
+          "items": {"$ref": "#/definitions/marking_definition"}
+        },
+        "indicators": {
+          "type": "array",
+          "description": "The title for this identity",
+          "items": {"$ref": "indicator.json"}
+        }
+      }
+    },
+    {"$ref": "markable_construct.json"}
+  ],
+  "definitions": {
+    "marking_definition": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier for this marking definition"
+        },
+        "marking_type": {
+          "type": "string",
+          "description": "The type of marking definition"
+        }
+      },
+      "required": ["id", "marking_type"]
+    }
+  }
+}

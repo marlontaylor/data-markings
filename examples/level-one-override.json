@@ -1,0 +1,27 @@
+{
+  "stix_version": "2.0",
+  "marking_definitions": [
+    {
+      "id": "us-cert:TLP-GREEN",
+      "marking_type": "tlp",
+      "tlp": "GREEN"
+    },
+    {
+      "id": "us-cert:TLP-RED",
+      "marking_type": "tlp",
+      "tlp": "RED"
+    }
+  ],
+  "marking_refs": ["us-cert:TLP-GREEN"],
+  "indicators": [
+    {
+      "id": "indicator-1234",
+      "marking_refs": ["us-cert:TLP-RED"],
+      "title": "First indicator"
+    },
+    {
+      "id": "indicator-4321",
+      "title": "Second indicator"
+    }
+  ]
+}
