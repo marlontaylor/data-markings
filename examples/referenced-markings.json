@@ -1,0 +1,20 @@
+{
+  "stix_version": "2.0",
+  "indicators": [
+    {
+      "id": "indicator-1111",
+      "marking_refs": ["us-cert:TLP-RED"],
+      "title": "First indicator"
+    },
+    {
+      "id": "indicator-2222",
+      "marking_refs": ["us-cert:TLP-GREEN"],
+      "title": "Second indicator"
+    },
+    {
+      "id": "indicator-3333",
+      "marking_refs": ["us-cert:TLP-GREEN"],
+      "title": "Second indicator"
+    }
+  ]
+}

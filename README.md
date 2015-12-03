@@ -21,7 +21,7 @@ This approach maintains the current (STIX 1.2) pattern for applying field-level 
 
 ### Marking Definitions
 
-Per the general philosophy of preferring referencing content to embedding content, marking definitions are defined once in the package and then referenced. Definitions are contained as an array in the (optional) `marking_definitions` key.
+Per the general philosophy of preferring referencing content to embedding content, marking definitions are defined once in the package and then referenced. Definitions are contained as an array in the (optional) `marking_definitions` key. Note that marking references may also (per agreement of the sharing community) refer to markings defined outside the instance document to either well-known markings (e.g. TLP) or to markings defined in another document.
 
 Both Level 1 and Level 2 markings refer to markings defined in this marking structure.
 
