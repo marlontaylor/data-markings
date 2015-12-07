@@ -14,77 +14,67 @@ The scope of this specification is only in defining *what markings apply to*, no
 
 This approach maintains the current (STIX 1.2) pattern for applying field-level markings but adds an additional capability to support more basic markings.
 
-* **Level 1 Markings**: Level 1 markings are the new capability that allow marking at two levels: the package as a whole, and top-level objects.  
+* **Level 1 Markings**: Level 1 markings are the new capability that allow marking at two levels: the package as a whole, and top-level objects.
 * **Level 2 Markings**: Level 2 markings are the current capability that allow marking at any level (down to the individual field).
+
+Level 1 markings and Level 2 markings are a way of *applying* markings, not of *defining* them. Markings are defined in the same place via the same approach (see: [Marking Definitions](#marking-definitions)) regardless of whether they're applied by Level 1 markings, Level 2 markings, or both.
 
 ## Data Model & Specification
 
 ### Marking Definitions
 
-Per the general philosophy of preferring referencing content to embedding content, marking definitions are defined once in the package and then referenced. Definitions are contained as an array in the (optional) `marking_definitions` key. Note that marking references may also (per agreement of the sharing community) refer to markings defined outside the instance document to either well-known markings (e.g. TLP) or to markings defined in another document.
+Data markings are defined in the `marking_definitions` field of a STIX package. The field is a list (array) of 1 or more marking definitions. Each definition contains two relevant fields:
 
-Both Level 1 and Level 2 markings refer to markings defined in this marking structure.
+* the `id` field is a standard STIX globally-unique ID
+* the `type` field identifies which type of data marking is being defined (e.g. TLP)
+
+Additional fields on the marking definition contain data for the marking itself (e.g., for TLP marking definitions there would be a field for `color`)
+
+Markings definitions may be referenced by Level 1 and/or Level 2 marking statements either within the document or defined externally.
 
 ### Level 1 Markings
 
-Level 1 markings allow producers to mark entire packages and top-level objects with marking statements via a more straightforward approach.
+Level 1 markings allow producers to mark entire packages and top-level objects via a simple and straightforward approach.
 
-#### Package-level markings
+Level 1 markings are contained in the `marking_refs` field, which is a list (array) of marking references (IDs of marking definitions). When used at the *package* level, the markings referenced in the list apply to the package itself and to *each* of the top-level objects in the package. When used on a *top-level object*, the markings apply to that object.
 
-Each STIX 2.0 package MAY contain a list of marking references. In the JSON MTI specification, the `marking_refs` key contains this list as a JSON array.
-
-Markings referenced from this key apply to all top-level objects contained in the package and to the package itself.
-
-#### Object-level markings
-
-Each STIX 2.0 top-level object MAY contain a list of marking references. In the JSON MTI specification, the `marking_refs` key contains this list as a JSON array.
-
-Markings that are referenced from this key apply to the object itself. Additionally, they override any markings **of the same type** applied at the package level. In other words, if the marking type in the object-level `marking_refs` matches a type that was applied at the package-level, the markings defined at the package level **do not** apply to that object.
+Markings applied at the object level override all markings **of the same type** that were applied at the package level. In other words, if the marking type in the object-level `marking_refs` matches a type that was applied at the package-level, the markings at the package level **do not** apply to that object.
 
 ### Level 2 Markings
 
-Level 2 markings allow producers to marking individual fields with marking statements via the STIX 1.2 approach.
+Level 2 markings allow producers to marking individual fields with marking statements via the existing STIX 1.2 approach of leveraging a controlled structure.
 
-#### Package-level markings
+Level 2 markings are contained in the `structured_markings` field, which is an array of objects. Each object in the array consists of two fields:
 
-Each STIX 2.0 package MAY contain a list of structured markings. In the JSON MTI specification, the `structured_markings` key contains an array of controlled structures along with a reference to which marking definitions they apply to. Each object in the `structured_markings` array consists of an object with two keys:
+* `controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of each item is a string JSONPath entry.
+* `marking_refs`: contains a list of references to the marking definitions to be applied, identical to Level 1 markings.
 
-* `controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the document.
-* `marking_refs`: contains a list of references to the marking definitions to be applied
+When used on a *package*, the root of the `controlled_structure` expression is the package. When used on a *top-level object*, the root of the `controlled_structure` expression is the object.
 
-Level 2 markings at the package level that specify fields already marked by level 1 markings **of the same type** override those markings for those fields. Similarly, Level 2 markings that target the same fields as Level 2 markings **of the same type** that appear earlier in the list of package markings override those markings.
-
-#### Object-level markings
-
-Each STIX 2.0 top-level object MAY contain a list of structured markings. In the JSON MTI specification, the `structured_markings` key contains an array of controlled structures along with a reference to which marking definitions they apply to. Each object in the `structured_markings` array consists of an object with two keys:
-
-* `controlled_structure`: contains a list of controlled structures, each of which is a representation of the fields that the referenced marking are applied to. In the JSON MTI specification, the format of this is a JSONPath entry. For the purposes of evaluating the JSONPath, the package is considered to be the root of the top-level object.
-* `marking_refs`: contains a list of references to the marking definitions to be applied
-
-Level 2 markings at the package level that specify fields already marked by level 1 markings **of the same type** override those markings for those fields. Similarly, Level 2 markings that target the same fields as Level 2 markings **of the same type** that appear earlier in the list of object markings or in the list of package markings override those markings.
+Level 2 markings override all Level 1 markings **of the same type**. Level 2 markings applied at the object override Level 2 markings of the same type applied at the package, and markings that appear later in a list override those of the same type appearing earlier in the list.
 
 ## Conformance Requirements
 
 A **Level 0 Markings Processor** is not able to process data markings. A **Level 1 Markings Processor** is only able to process Level 1 data markings. A **Level 2 Markings Processor** is able to process both Level 1 markings and Level 2 markings.
 
 ### Level 0
-* **0.1**: A Level 0 processor who receives a document that contains either Level 1 or Level 2 markings at the package level (in the MTI specification, contains the `marking_refs` or `structured_markings` keys and the corresponding values are not empty arrays) **MUST** reject the document.  
-* **0.2**: A Level 0 processor who receives a document that DOES NOT contain Level 1 or Level 2 markings at the package level (in the MTI specification, does not contain the `marking_refs` or `structured_markings` keys or the corresponding values are present but contain an empty array) **MAY** accept the document.  
-* **0.3**: A Level 0 processor processing a document that contains an object with Level 1 or Level 2 markings (in the MTI specification, the object contains the `marking_refs` or `structured_markings` keys and the corresponding values do not consist of empty arrays) **MUST** reject the object. It **MAY** continue to process the rest of the document.  
+* **0.1**: A Level 0 processor who receives a document that contains either Level 1 or Level 2 markings at the package level (in the MTI specification, contains the `marking_refs` or `structured_markings` fields and the corresponding values are not empty arrays) **MUST** reject the document.  
+* **0.2**: A Level 0 processor who receives a document that DOES NOT contain Level 1 or Level 2 markings at the package level (in the MTI specification, does not contain the `marking_refs` or `structured_markings` fields or the corresponding values are present but contain an empty array) **MAY** accept the document.  
+* **0.3**: A Level 0 processor processing a document that contains an object with Level 1 or Level 2 markings (in the MTI specification, the object contains the `marking_refs` or `structured_markings` fields and the corresponding values do not consist of empty arrays) **MUST** reject the object. It **MAY** continue to process the rest of the document.  
 
 ### Level 1  
-* **1.1**: A Level 1 processor who receives a package that contains Level 2 markings at the package level (in the MTI specification, contains the `structured markings` key and the value does not consist of an empty array) **MUST** reject the document.  
-* **1.2**: A Level 1 processor who receives a document that DOES NOT contain Level 2 markings at the package level (in the MTI specification, does not contain the `structured_markings` key or the value consists of an empty array) **MAY** accept the document.  
-* **1.3**: A Level 1 processor processing a document that contains an object with Level 2 markings (in the MTI specification, the object contains the `structured_markings` key and the value does not contain an empty array) **MUST** reject the object. It **MAY** continue to process the rest of the document.  
+* **1.1**: A Level 1 processor who receives a package that contains Level 2 markings at the package level (in the MTI specification, contains the `structured markings` field and the value does not consist of an empty array) **MUST** reject the document.  
+* **1.2**: A Level 1 processor who receives a document that DOES NOT contain Level 2 markings at the package level (in the MTI specification, does not contain the `structured_markings` field or the value consists of an empty array) **MAY** accept the document.  
+* **1.3**: A Level 1 processor processing a document that contains an object with Level 2 markings (in the MTI specification, the object contains the `structured_markings` field and the value does not contain an empty array) **MUST** reject the object. It **MAY** continue to process the rest of the document.  
 * **1.4**: A Level 1 processor **MUST** process all Level 1 markings per the mechanisms outlined in this specification.  
 
 ### Level 2  
 * **2.1**: A Level 2 processor **MUST** process all Level 1 and Level 2 markings per the mechanisms outlined in this specification.
 
 ### Marking Precedence
-* **3.1**: Level 1 and Level 2 processors **MUST** honor the following order of precedence:  
-  * Level 2 markings at the object level (in reverse order of occurrence)
-  * Level 2 markings at the package level (in reverse order of occurrence)
+* **3.1**: Level 1 and Level 2 processors **MUST** honor the following order of precedence when encountering more than one marking application with the same type:  
+  * Level 2 markings at the object level, in reverse order of occurrence (e.g. later markings override earlier markings of the same type)
+  * Level 2 markings at the package level, in reverse order of occurrence (e.g. later markings override earlier markings of the same type)
   * Level 1 markings at the object level
   * Level 1 markings at the package level
 
