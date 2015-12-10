@@ -258,7 +258,7 @@ Here, the entire document is marked TLP:GREEN and later an indicator title is ma
       "structured_markings": [
         {
           "controlled_structure": [
-            "@.title"
+            "$.title"
           ],
           "marking_refs": ["us-cert:TLP-RED"]
         }
